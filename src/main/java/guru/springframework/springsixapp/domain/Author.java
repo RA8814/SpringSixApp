@@ -2,6 +2,7 @@ package guru.springframework.springsixapp.domain;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,7 +14,8 @@ public class Author {
     private String firstName;
     private String lastName;
     @ManyToMany(mappedBy = "authors") // <-- notice that "authors" is the same name as the property that is a Set of <Author> within the Book class!
-    private Set<Book> books;
+    private Set<Book> books = new HashSet<>();
+    //^^ Needs to be initialised because can cause a null exception upon creation for repository
 
     public Long getId() {
         return id;

@@ -2,6 +2,7 @@ package guru.springframework.springsixapp.domain;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,7 +16,8 @@ public class Book {
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
     //^^ This Means : there will exist a table called "author_book" that is generated using the specified join colums
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
+    //^^ Needs to be initialised because can cause a null exception upon creation for repository
 
     public void setId(Long id) {
         this.id = id;

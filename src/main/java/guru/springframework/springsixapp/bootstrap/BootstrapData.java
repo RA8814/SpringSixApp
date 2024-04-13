@@ -2,8 +2,10 @@ package guru.springframework.springsixapp.bootstrap;
 
 import guru.springframework.springsixapp.domain.Author;
 import guru.springframework.springsixapp.domain.Book;
+import guru.springframework.springsixapp.domain.Publisher;
 import guru.springframework.springsixapp.repositories.AuthorRepository;
 import guru.springframework.springsixapp.repositories.BookRepository;
+import guru.springframework.springsixapp.repositories.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +15,12 @@ public class BootstrapData implements CommandLineRunner {
                             //^^ If this class is found within the context, pick it up and execute the run method
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
 
-    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -31,12 +35,20 @@ public class BootstrapData implements CommandLineRunner {
         Author ericSavedInstance = authorRepository.save(eric); Book dddSavedInstance = bookRepository.save(ddd);
         Author rodSavedInstance = authorRepository.save(rod); Book spfSavedInstance = bookRepository.save(spf);
 
+        Publisher publisher = new Publisher();
+        publisher.setPublisherName("My Publisher");
+        publisher.setAddress("123 Main");
+        Publisher publisherSavedInstance = publisherRepository.save(publisher);
+        ddd.setPublisher(publisherSavedInstance);
+
         // Combine:
         ericSavedInstance.getBooks().add(dddSavedInstance);
         rodSavedInstance.getBooks().add(spfSavedInstance);
         // Potentially Useless Persist/Save, supposedly we would not have persisted the book associations buuuuuuuuut doubt it:
         authorRepository.save(ericSavedInstance);
         authorRepository.save(rodSavedInstance);
+        publisherRepository.save(publisherSavedInstance);
+        bookRepository.save(ddd);
 
         System.out.println("In Bootstrap:");
         System.out.println("\tAuthor count: " + authorRepository.count());

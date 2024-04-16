@@ -41,14 +41,19 @@ public class BootstrapData implements CommandLineRunner {
         Publisher publisherSavedInstance = publisherRepository.save(publisher);
         ddd.setPublisher(publisherSavedInstance);
 
-        // Combine:
+        // Combine (proof that eric and ericSavedInstance are the same object in memory):
+        // This two-way save is necessary to populate the AUTHOR_BOOK join table
         ericSavedInstance.getBooks().add(dddSavedInstance);
         rodSavedInstance.getBooks().add(spfSavedInstance);
+        dddSavedInstance.getAuthors().add(eric);
+        spfSavedInstance.getAuthors().add(rod);
+
         // Potentially Useless Persist/Save, supposedly we would not have persisted the book associations buuuuuuuuut doubt it:
         authorRepository.save(ericSavedInstance);
         authorRepository.save(rodSavedInstance);
         publisherRepository.save(publisherSavedInstance);
         bookRepository.save(ddd);
+        bookRepository.save(spf);
 
         System.out.println("In Bootstrap:");
         System.out.println("\tAuthor count: " + authorRepository.count());
